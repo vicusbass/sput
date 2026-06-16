@@ -33,6 +33,10 @@ const ogImageAlt = 'Robert "Sput" Searight — drummer, producer and bandleader'
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL.href} />
+
+    <!-- Keep this site out of search indexes and AI training/answer crawlers. -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <meta name="theme-color" content="#181109" />
 
     <!-- Open Graph -->
