@@ -6,14 +6,22 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title?: string;
   description?: string;
+  /** Path (relative to the site root) of the social-share image. */
+  image?: string;
 }
 
 const {
   title = 'Robert "Sput" Searight — Drummer · Producer · Bandleader',
   description = "Robert \"Sput\" Searight: drummer, producer and bandleader. Ghost-Note co-leader, Snarky Puppy pillar. Tour dates, collab map, and booking.",
+  image = "/og.jpg",
 } = Astro.props;
 
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+// Open Graph / Twitter need absolute URLs — resolve against the configured `site`.
+const canonicalURL = new URL(pathname, Astro.site);
+const ogImageURL = new URL(image, Astro.site);
+const ogImageAlt = 'Robert "Sput" Searight — drummer, producer and bandleader';
 ---
 
 <!doctype html>
@@ -24,10 +32,29 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL.href} />
+    <meta name="theme-color" content="#181109" />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#181109" />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:site_name" content="Sput Searight" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImageURL.href} />
+    <meta property="og:image:secure_url" content={ogImageURL.href} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL.href} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
