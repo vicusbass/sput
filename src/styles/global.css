@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   THEME TOKENS
+   Static brand surfaces + typefaces. The five accent colors are defined as
+   live custom properties below (see :root) so the palette can be swapped at
+   runtime; `@theme inline` makes Tailwind emit `var(--mag)` etc. directly
+   into the generated utilities instead of baking a static value.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-display: "Syne", sans-serif;
+  --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  --color-ink: #181109;
+  --color-paper: #f4e8d2;
+  --color-panel: #e2cfa6;
+  --color-panel2: #efe0c2;
+  --color-field: #fbf4e5;
+}
+
+@theme inline {
+  --color-mar: var(--mar);
+  --color-mag: var(--mag);
+  --color-teal: var(--teal);
+  --color-tang: var(--tang);
+  --color-violet: var(--violet);
+}
+
+/* ---------------------------------------------------------------------------
+   PALETTE — "Hot Funk"
+--------------------------------------------------------------------------- */
+:root {
+  --mar: #ffb22c;
+  --mag: #ff3d7f;
+  --teal: #06bea8;
+  --tang: #ff5a1f;
+  --violet: #7a5cff;
+}
+
+/* ---------------------------------------------------------------------------
+   BASE
+--------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  background: var(--color-paper);
+}
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Grain / dot texture overlay */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(#181109 0.5px, transparent 0.5px);
+  background-size: 4px 4px;
+}
+
+/* Brutalist horizontal scrollbar for the collab timeline */
+.scrollhide::-webkit-scrollbar {
+  height: 10px;
+}
+.scrollhide::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border-radius: 0;
+}
+.scrollhide::-webkit-scrollbar-track {
+  background: var(--color-panel);
+}
+
+/* ---------------------------------------------------------------------------
+   ANIMATIONS
+--------------------------------------------------------------------------- */
+@keyframes marq {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@keyframes wob {
+  0%,
+  100% {
+    transform: rotate(-7deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.55;
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translate(0, -18px) rotate(var(--r, 0deg));
+  }
+}
+
+.anim-spin {
+  animation: spin 7s linear infinite;
+}
+.anim-bob {
+  animation: bob 1s ease-in-out infinite;
+}
+.anim-pulse {
+  animation: pulse 1.2s infinite;
+}
+.anim-drift {
+  animation: drift 5s ease-in-out infinite;
+}
+.anim-marq {
+  animation: marq 40s linear infinite;
+}
+
+/* Reveal-on-scroll: elements start hidden, .is-in flips them on */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}

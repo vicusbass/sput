@@ -1,0 +1,70 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Robert "Sput" Searight — Drummer · Producer · Bandleader',
+  description = "Robert \"Sput\" Searight: drummer, producer and bandleader. Ghost-Note co-leader, Snarky Puppy pillar. Tour dates, collab map, and booking.",
+} = Astro.props;
+
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#181109" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <Nav pathname={pathname} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Reveal-on-scroll for [data-reveal] elements.
+      const reveals = document.querySelectorAll<HTMLElement>("[data-reveal]");
+      reveals.forEach((el) => {
+        const delay = el.dataset.delay;
+        if (delay) el.style.setProperty("--reveal-delay", `${delay}ms`);
+      });
+      if (reveals.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add("is-in");
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+        );
+        reveals.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

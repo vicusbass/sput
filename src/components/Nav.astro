@@ -1,0 +1,88 @@
+---
+import { NAV } from "../data/site";
+
+interface Props {
+  pathname: string;
+}
+const { pathname } = Astro.props;
+const isActive = (href: string) =>
+  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+---
+
+<nav
+  class="sticky top-0 z-50 flex items-center justify-between border-b-[3px] border-ink bg-paper px-5 py-4 sm:px-7"
+>
+  <a href="/" class="flex items-center gap-2.5" aria-label="Sput — home">
+    <span class="font-display text-[26px] font-extrabold tracking-[-1px] text-ink">SPUT</span>
+    <span class="anim-bob inline-block h-3.5 w-3.5 rounded-full bg-mag"></span>
+  </a>
+
+  <!-- Desktop -->
+  <div class="hidden items-center gap-1 md:flex">
+    {
+      NAV.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isActive(item.href) ? "page" : undefined}
+          class="group relative px-3 py-2 font-mono text-[13px] font-bold uppercase tracking-[1px] text-ink"
+        >
+          {item.label}
+          <span
+            class:list={[
+              "absolute bottom-0.5 left-3 right-3 h-[3px] origin-left bg-mag transition-transform duration-200",
+              isActive(item.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
+            ]}
+          />
+        </a>
+      ))
+    }
+    <a
+      href="/contact"
+      class="ml-3 border-[3px] border-ink bg-ink px-[18px] py-[9px] font-mono text-[13px] font-bold uppercase tracking-[1px] text-paper shadow-[4px_4px_0_var(--color-teal)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-teal)]"
+      >Book Sput</a
+    >
+  </div>
+
+  <!-- Mobile -->
+  <details class="nav-mobile relative md:hidden">
+    <summary
+      class="flex cursor-pointer list-none items-center gap-2 border-[3px] border-ink bg-ink px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[1px] text-paper"
+    >
+      Menu
+      <span class="flex flex-col gap-[3px]" aria-hidden="true">
+        <span class="block h-[2px] w-4 bg-paper"></span>
+        <span class="block h-[2px] w-4 bg-paper"></span>
+        <span class="block h-[2px] w-4 bg-paper"></span>
+      </span>
+    </summary>
+    <div
+      class="absolute right-0 top-[calc(100%+10px)] z-50 flex w-[230px] flex-col gap-1 border-[3px] border-ink bg-paper p-3 shadow-[7px_7px_0_var(--color-ink)]"
+    >
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            class:list={[
+              "border-[3px] border-ink px-4 py-3 font-mono text-[13px] font-bold uppercase tracking-[1px]",
+              isActive(item.href) ? "bg-ink text-paper" : "bg-paper text-ink",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href="/contact"
+        class="border-[3px] border-ink bg-mag px-4 py-3 font-mono text-[13px] font-bold uppercase tracking-[1px] text-ink"
+        >Book Sput →</a
+      >
+    </div>
+  </details>
+</nav>
+
+<style>
+  .nav-mobile > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

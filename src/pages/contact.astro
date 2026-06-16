@@ -1,0 +1,177 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { INQUIRY_TYPES, CONTACTS, SOCIALS } from "../data/site";
+
+const fieldClass =
+  "w-full border-[3px] border-ink bg-field px-4 py-3.5 text-[17px] outline-none focus:shadow-[0_0_0_3px_var(--color-mar)]";
+const labelClass =
+  "mb-2 block font-mono text-[12px] font-bold uppercase tracking-[2px]";
+const errClass = "mt-1.5 hidden font-mono text-[12px] font-bold text-mag";
+const socialHover: Record<string, string> = {
+  mag: "hover:bg-mag hover:text-paper",
+  teal: "hover:bg-teal",
+  tang: "hover:bg-tang hover:text-paper",
+};
+---
+
+<Layout
+  title="Book Sput — Contact | Robert &quot;Sput&quot; Searight"
+  description="Festivals, sessions, clinics, private events. Book Robert &quot;Sput&quot; Searight — the team replies within 48 hours."
+>
+  <div class="mx-auto max-w-[1080px] px-5 pb-[90px] pt-14 sm:px-7">
+    <h1
+      class="font-display text-[clamp(48px,8vw,118px)] font-extrabold uppercase leading-[.84] tracking-[-3px]"
+    >
+      Book<br /><span class="text-mag">Sput</span>
+    </h1>
+    <p class="mt-[18px] max-w-[560px] text-[19px] leading-[1.5]">
+      Festivals, sessions, clinics, private events. Drop the details and the team will get back
+      within 48 hours.
+    </p>
+
+    <div class="mt-[46px] grid grid-cols-1 items-start gap-11 md:grid-cols-[1.3fr_.7fr]">
+      <!-- form / success -->
+      <div>
+        <form id="inquiry-form" class="flex flex-col gap-5" novalidate>
+          <div>
+            <label class={labelClass} for="f-name">Your Name</label>
+            <input id="f-name" name="name" placeholder="Jane Promoter" class={fieldClass} />
+            <span class={errClass} data-err="name"></span>
+          </div>
+          <div>
+            <label class={labelClass} for="f-email">Email</label>
+            <input id="f-email" name="email" placeholder="you@venue.com" class={fieldClass} />
+            <span class={errClass} data-err="email"></span>
+          </div>
+          <div>
+            <label class={labelClass} for="f-type">Inquiry Type</label>
+            <select id="f-type" name="type" class={`${fieldClass} cursor-pointer`}>
+              <option value="">Select one…</option>
+              {INQUIRY_TYPES.map((t) => <option value={t}>{t}</option>)}
+            </select>
+            <span class={errClass} data-err="type"></span>
+          </div>
+          <div>
+            <label class={labelClass} for="f-message">The Details</label>
+            <textarea
+              id="f-message"
+              name="message"
+              rows="4"
+              placeholder="Dates, city, budget, vibe…"
+              class={`${fieldClass} resize-y`}></textarea>
+            <span class={errClass} data-err="message"></span>
+          </div>
+          <button
+            type="submit"
+            class="self-start border-[3px] border-ink bg-ink px-[30px] py-4 font-mono text-[15px] font-bold uppercase tracking-[1px] text-paper shadow-[5px_5px_0_var(--color-mag)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_var(--color-mag)]"
+            >Send Inquiry →</button
+          >
+        </form>
+
+        <div
+          id="inquiry-success"
+          hidden
+          class="border-[3px] border-ink bg-teal p-10 shadow-[8px_8px_0_var(--color-ink)]"
+        >
+          <div class="mb-3.5 text-[48px]">🥁</div>
+          <h2 class="font-display text-[38px] font-extrabold uppercase leading-[.95] tracking-[-1px]">
+            Message in the pocket!
+          </h2>
+          <p class="mt-3.5 text-[18px] leading-[1.5]">
+            Thanks <span id="success-name">friend</span> — the team will hit you back within 48
+            hours. Keep the groove.
+          </p>
+          <button
+            id="reset-form"
+            type="button"
+            class="mt-[22px] cursor-pointer border-[3px] border-ink bg-ink px-[22px] py-3 font-mono text-[14px] font-bold uppercase tracking-[1px] text-paper"
+            >Send another</button
+          >
+        </div>
+      </div>
+
+      <!-- direct contacts -->
+      <div class="flex flex-col gap-[18px]">
+        {
+          CONTACTS.map((c, i) => (
+            <div class:list={["border-[3px] border-ink p-6", i === 0 ? "bg-mar" : "bg-field"]}>
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[2px] opacity-70">
+                {c.label}
+              </span>
+              <div class="mt-1.5 font-display text-[20px] font-extrabold break-words">{c.value}</div>
+            </div>
+          ))
+        }
+        <div class="flex gap-2.5">
+          {
+            SOCIALS.map((s) => (
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener"
+                class:list={[
+                  "flex-1 border-[3px] border-ink bg-field py-3.5 text-center font-mono text-[13px] font-bold uppercase tracking-[1px] text-ink transition-colors duration-150",
+                  socialHover[s.hover],
+                ]}
+              >
+                {s.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const form = document.getElementById("inquiry-form") as HTMLFormElement | null;
+  const success = document.getElementById("inquiry-success");
+  const reset = document.getElementById("reset-form");
+
+  function setError(field: string, msg: string) {
+    const span = document.querySelector<HTMLElement>(`[data-err="${field}"]`);
+    if (!span) return;
+    span.textContent = msg;
+    span.style.display = msg ? "block" : "none";
+  }
+
+  if (form && success) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const name = String(data.get("name") || "").trim();
+      const email = String(data.get("email") || "").trim();
+      const type = String(data.get("type") || "");
+      const message = String(data.get("message") || "").trim();
+
+      const errs: Record<string, string> = {};
+      if (!name) errs.name = "We need a name to reach you.";
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) errs.email = "Enter a valid email.";
+      if (!type) errs.type = "Pick an inquiry type.";
+      if (message.length < 10) errs.message = "Give us a little more detail (10+ chars).";
+
+      ["name", "email", "type", "message"].forEach((f) => setError(f, errs[f] || ""));
+
+      if (Object.keys(errs).length) {
+        form.querySelector<HTMLElement>(`[data-err="${Object.keys(errs)[0]}"]`)
+          ?.previousElementSibling
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      const sn = document.getElementById("success-name");
+      if (sn) sn.textContent = name.split(" ")[0];
+      form.hidden = true;
+      success.hidden = false;
+      success.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    reset?.addEventListener("click", () => {
+      form.reset();
+      ["name", "email", "type", "message"].forEach((f) => setError(f, ""));
+      success.hidden = true;
+      form.hidden = false;
+    });
+  }
+</script>

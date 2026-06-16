@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Astro
+.astro/
+
+# fetched design source (reference only)
+design
+
+# verification screenshots
+.playwright-mcp/

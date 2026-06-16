@@ -1,0 +1,358 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { COLLABS, FAMILIES } from "../data/site";
+
+const first = COLLABS[0];
+const initials = (artist: string) =>
+  artist
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+const spotify = (c: { artist: string; album: string }) =>
+  "https://open.spotify.com/search/" + encodeURIComponent(`${c.artist} ${c.album}`);
+---
+
+<Layout
+  title="The Collab Map — Robert &quot;Sput&quot; Searight"
+  description="Two decades of pocket. Every node is a record or a run with Snarky Puppy, Ghost-Note, and a who's-who of sessions."
+>
+  <div class="pb-[90px] pt-14">
+    <!-- header -->
+    <div class="mx-auto max-w-[1180px] px-5 sm:px-7">
+      <p class="mb-3.5 font-mono text-[13px] font-bold uppercase tracking-[3px] text-tang">
+        // Two decades of pocket
+      </p>
+      <h1
+        class="font-display text-[clamp(44px,7.5vw,104px)] font-extrabold uppercase leading-[.86] tracking-[-3px]"
+      >
+        The Collab<br />Map
+      </h1>
+      <p class="mt-[18px] max-w-[560px] text-[17px] leading-[1.5]">
+        Every node is a record or a run. Tap one to dig into the year, the role, and a place to hit
+        play.
+      </p>
+
+      <!-- filters -->
+      <div id="fam-filters" class="mt-7 flex flex-wrap gap-2.5">
+        {
+          FAMILIES.map((fam) => (
+            <button
+              type="button"
+              class="fam cursor-pointer border-[3px] border-ink px-[18px] py-2.5 font-mono text-[13px] font-bold uppercase tracking-[1px] transition-transform duration-150 hover:-translate-y-0.5"
+              data-fam={fam}
+              aria-pressed={fam === "All" ? "true" : "false"}
+            >
+              {fam}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- timeline -->
+    <div
+      id="collab-timeline"
+      class="scrollhide mt-3.5 overflow-x-auto overflow-y-hidden border-y-[3px] border-ink bg-panel2 px-5 py-8 sm:px-7"
+    >
+    </div>
+
+    <!-- detail panel -->
+    <div class="mx-auto mt-[38px] max-w-[1180px] px-5 sm:px-7">
+      <div
+        id="collab-detail"
+        class="grid grid-cols-1 items-center gap-9 border-[3px] border-ink bg-ink p-[34px] text-paper shadow-[8px_8px_0_var(--color-mar)] sm:grid-cols-[300px_1fr]"
+      >
+        <!-- record -->
+        <div
+          id="cd-record"
+          class="anim-spin relative mx-auto flex aspect-square w-[200px] items-center justify-center rounded-full border-[3px] border-paper sm:w-full"
+          style={`background:var(--mar)`}
+        >
+          <div class="absolute inset-[18%] rounded-full border-2 border-paper/35"></div>
+          <div class="absolute inset-[34%] rounded-full border-2 border-paper/25"></div>
+          <div
+            class="flex h-[34%] w-[34%] items-center justify-center rounded-full border-[3px] border-paper bg-ink font-display text-[22px] font-extrabold"
+            id="cd-initials"
+          >
+            {initials(first.artist)}
+          </div>
+        </div>
+        <div>
+          <div
+            id="cd-meta"
+            class="mb-2 font-mono text-[13px] font-bold uppercase tracking-[2px]"
+            style="color:var(--mar)"
+          >
+            {first.year} · {first.family}
+          </div>
+          <div
+            id="cd-artist"
+            class="font-display text-[clamp(30px,4.5vw,54px)] font-extrabold uppercase leading-[.95] tracking-[-1px]"
+          >
+            {first.artist}
+          </div>
+          <div id="cd-album" class="mt-2 font-display text-[22px] font-bold opacity-85">
+            {first.album}
+          </div>
+          <div class="my-[18px] mb-[22px] flex flex-wrap gap-2">
+            <span
+              id="cd-role"
+              class="border-2 border-paper px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[1px]"
+              >{first.role}</span
+            >
+          </div>
+          <p id="cd-note" class="max-w-[560px] text-[16px] leading-[1.5] opacity-85">
+            {first.note}
+          </p>
+          <a
+            id="cd-spotify"
+            href={spotify(first)}
+            target="_blank"
+            rel="noopener"
+            class="mt-[22px] inline-flex items-center gap-2.5 border-[3px] border-paper bg-[#1DB954] px-[22px] py-3 font-mono text-[14px] font-bold uppercase tracking-[1px] text-[#06280f] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5"
+            >▶ Play on Spotify</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .fam[aria-pressed="true"] {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .fam[aria-pressed="false"] {
+    background: transparent;
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  import { COLLABS } from "../data/site";
+
+  type Collab = (typeof COLLABS)[number];
+
+  const timelineEl = document.getElementById("collab-timeline");
+  const filtersEl = document.getElementById("fam-filters");
+  if (timelineEl && filtersEl) {
+    const state = { filter: "All", selected: 0 };
+
+    const accentVars = ["--mar", "--mag", "--teal", "--tang", "--violet"];
+    const accent = (i: number) =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue(accentVars[i % accentVars.length])
+        .trim() || "#FFB22C";
+
+    const initials = (artist: string) =>
+      artist
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
+    const filtered = (): Collab[] =>
+      state.filter === "All" ? COLLABS : COLLABS.filter((c) => c.family === state.filter);
+
+    const GAP = 230;
+    const PAD = 90;
+    const BASE_Y = 218;
+
+    function el(tag: string, style: Partial<CSSStyleDeclaration>, extra?: Record<string, string>) {
+      const node = document.createElement(tag);
+      Object.assign(node.style, style);
+      if (extra) for (const k in extra) node.setAttribute(k, extra[k]);
+      return node;
+    }
+
+    function renderTimeline() {
+      const list = filtered();
+      const width = PAD * 2 + Math.max(1, list.length) * GAP;
+      timelineEl!.innerHTML = "";
+
+      const stage = el("div", {
+        position: "relative",
+        height: "476px",
+        width: `${width}px`,
+        minWidth: "100%",
+      });
+
+      // baseline + dotted accent line
+      stage.appendChild(
+        el("div", {
+          position: "absolute",
+          left: `${PAD - 40}px`,
+          right: "40px",
+          top: `${BASE_Y}px`,
+          height: "4px",
+          background: "#181109",
+        }),
+      );
+      stage.appendChild(
+        el("div", {
+          position: "absolute",
+          left: `${PAD - 40}px`,
+          right: "40px",
+          top: `${BASE_Y - 5}px`,
+          height: "14px",
+          borderTop: `4px dotted ${accent(3)}`,
+          opacity: "0.4",
+        }),
+      );
+
+      list.forEach((c, i) => {
+        const x = PAD + i * GAP;
+        const up = i % 2 === 0;
+        const ac = accent(i);
+        const isSel = i === state.selected;
+        const nodeY = up ? BASE_Y - 96 : BASE_Y + 96;
+        const labelY = up ? BASE_Y - 198 : BASE_Y + 170;
+
+        // connector stick
+        stage.appendChild(
+          el("div", {
+            position: "absolute",
+            left: `${x + 30}px`,
+            top: `${up ? nodeY + 64 : BASE_Y}px`,
+            width: "3px",
+            height: `${up ? BASE_Y - (nodeY + 64) : nodeY - BASE_Y}px`,
+            background: "#181109",
+          }),
+        );
+        // baseline dot
+        stage.appendChild(
+          el("div", {
+            position: "absolute",
+            left: `${x + 24}px`,
+            top: `${BASE_Y - 7}px`,
+            width: "18px",
+            height: "18px",
+            borderRadius: "50%",
+            background: ac,
+            border: "3px solid #181109",
+            zIndex: "2",
+          }),
+        );
+
+        // node button
+        const node = el(
+          "button",
+          {
+            position: "absolute",
+            left: `${x}px`,
+            top: `${nodeY}px`,
+            width: "64px",
+            height: "64px",
+            borderRadius: "50%",
+            background: ac,
+            border: "3px solid #181109",
+            cursor: "pointer",
+            zIndex: "3",
+            fontFamily: "'Syne',sans-serif",
+            fontWeight: "800",
+            fontSize: "18px",
+            color: "#181109",
+            boxShadow: isSel ? "0 0 0 6px rgba(24,17,9,.12), 5px 5px 0 #181109" : "3px 3px 0 #181109",
+            transform: isSel ? "scale(1.18)" : "scale(1)",
+            transition: "transform .2s, box-shadow .2s",
+          },
+          { "aria-label": `${c.artist} — ${c.album} (${c.year})` },
+        );
+        node.textContent = initials(c.artist);
+        node.addEventListener("click", () => {
+          state.selected = i;
+          renderTimeline();
+          renderDetail();
+        });
+        stage.appendChild(node);
+
+        // label
+        const label = el("div", {
+          position: "absolute",
+          left: `${x - 40}px`,
+          top: `${labelY}px`,
+          width: "144px",
+          textAlign: "center",
+          pointerEvents: "none",
+        });
+        const yr = el("div", {
+          fontFamily: "'Space Mono',monospace",
+          fontWeight: "700",
+          fontSize: "13px",
+          color: ac,
+          letterSpacing: "1px",
+        });
+        yr.textContent = String(c.year);
+        const ar = el("div", {
+          fontFamily: "'Syne',sans-serif",
+          fontWeight: "700",
+          fontSize: "14px",
+          lineHeight: "1.05",
+          marginTop: "2px",
+          textTransform: "uppercase",
+        });
+        ar.textContent = c.artist;
+        const al = el("div", {
+          fontFamily: "'Space Grotesk',sans-serif",
+          fontSize: "11px",
+          opacity: "0.6",
+          marginTop: "1px",
+        });
+        al.textContent = c.album;
+        label.append(yr, ar, al);
+        stage.appendChild(label);
+      });
+
+      timelineEl!.appendChild(stage);
+    }
+
+    const $ = (id: string) => document.getElementById(id);
+
+    function renderDetail() {
+      const list = filtered();
+      const i = Math.min(state.selected, Math.max(0, list.length - 1));
+      const c = list[i] || COLLABS[0];
+      const ac = accent(i);
+
+      const record = $("cd-record");
+      if (record) record.style.background = ac;
+      const init = $("cd-initials");
+      if (init) init.textContent = initials(c.artist);
+      const meta = $("cd-meta");
+      if (meta) {
+        meta.textContent = `${c.year} · ${c.family}`;
+        meta.style.color = ac;
+      }
+      const artist = $("cd-artist");
+      if (artist) artist.textContent = c.artist;
+      const album = $("cd-album");
+      if (album) album.textContent = c.album;
+      const role = $("cd-role");
+      if (role) role.textContent = c.role;
+      const note = $("cd-note");
+      if (note) note.textContent = c.note;
+      const sp = $("cd-spotify") as HTMLAnchorElement | null;
+      if (sp)
+        sp.href = "https://open.spotify.com/search/" + encodeURIComponent(`${c.artist} ${c.album}`);
+    }
+
+    filtersEl.querySelectorAll<HTMLButtonElement>(".fam").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.filter = btn.dataset.fam || "All";
+        state.selected = 0;
+        filtersEl.querySelectorAll<HTMLButtonElement>(".fam").forEach((b) => {
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
+        renderTimeline();
+        renderDetail();
+      });
+    });
+
+    renderTimeline();
+    renderDetail();
+  }
+</script>

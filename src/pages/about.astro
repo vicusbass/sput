@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ABOUT_BIO, GEAR } from "../data/site";
+---
+
+<Layout
+  title="About — The Man Behind The Kit | Robert &quot;Sput&quot; Searight"
+  description="Robert &quot;Sput&quot; Searight: Dallas-born drummer, producer and bandleader. Gospel fire, hip-hop swagger, and deep funk — built on the pocket."
+>
+  <div class="mx-auto max-w-[1180px] px-5 pb-[90px] pt-14 sm:px-7">
+    <h1
+      class="font-display text-[clamp(48px,8vw,118px)] font-extrabold uppercase leading-[.84] tracking-[-3px]"
+    >
+      The Man<br />Behind The<br /><span class="text-teal [-webkit-text-stroke:3px_var(--color-ink)]"
+        >Kit</span
+      >
+    </h1>
+
+    <div class="mt-12 grid grid-cols-1 items-start gap-10 md:grid-cols-[1.2fr_.8fr]">
+      <div data-reveal>
+        {
+          ABOUT_BIO.map((p, i) => (
+            <p
+              class:list={["text-[19px] leading-[1.6]", i < ABOUT_BIO.length - 1 ? "mb-5" : ""]}
+              set:html={p}
+            />
+          ))
+        }
+      </div>
+      <div data-reveal data-delay="120" class="relative">
+        <div class="absolute -left-3 -top-3 bottom-3 right-3 border-[3px] border-ink bg-mag"></div>
+        <div class="relative aspect-[3/4] overflow-hidden border-[3px] border-ink bg-panel">
+          <img
+            src="/sput-hero.jpg"
+            alt={'Robert "Sput" Searight portrait'}
+            width="540"
+            height="720"
+            class="block h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- pull quote -->
+    <div
+      data-reveal
+      class="my-[70px] border-[3px] border-ink bg-ink px-5 py-[46px] text-center text-paper sm:px-7"
+    >
+      <p class="font-display text-[clamp(26px,4vw,52px)] font-bold leading-[1.04] tracking-[-1px]">
+        "I'm not trying to play the most notes.<br />I'm trying to make you <span class="text-mar"
+          >feel</span
+        > the one."
+      </p>
+    </div>
+
+    <!-- the kit -->
+    <div data-reveal>
+      <p class="mb-[22px] font-mono text-[13px] font-bold uppercase tracking-[3px] text-tang">
+        // The Setup
+      </p>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {
+          GEAR.map((g) => (
+            <div class="flex min-h-[140px] flex-col justify-between border-[3px] border-ink bg-field p-[22px]">
+              <span class="font-mono text-[11px] font-bold uppercase tracking-[2px] opacity-70">
+                {g.label}
+              </span>
+              <span class="font-display text-[20px] font-extrabold uppercase leading-none">
+                {g.value}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

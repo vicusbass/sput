@@ -1,0 +1,77 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { TOUR, STATUS_LABEL } from "../data/site";
+---
+
+<Layout
+  title="Tour — On The Road '26 | Robert &quot;Sput&quot; Searight"
+  description="Ghost-Note world tour 2026. Catch Robert &quot;Sput&quot; Searight and the pocket in a room near you. Tickets and dates."
+>
+  <div class="mx-auto max-w-[1180px] px-5 pb-[90px] pt-14 sm:px-7">
+    <div class="mb-2 flex flex-wrap items-end justify-between gap-4">
+      <h1
+        class="font-display text-[clamp(48px,8vw,112px)] font-extrabold uppercase leading-[.86] tracking-[-3px]"
+      >
+        On The<br />Road <span class="text-mag">'26</span>
+      </h1>
+      <p
+        class="max-w-[300px] font-mono text-[13px] uppercase leading-[1.7] tracking-[1px]"
+      >
+        Ghost-Note world tour. Catch the pocket in a room near you.
+        <span class="text-tang">↘</span>
+      </p>
+    </div>
+
+    <div class="my-[26px] mb-1 h-[3px] bg-ink"></div>
+
+    <ul>
+      {
+        TOUR.map((row, i) => (
+          <li
+            data-reveal
+            data-delay={Math.min(i * 50, 300)}
+            class="group grid grid-cols-[88px_1fr] items-center gap-4 border-b-[3px] border-ink px-2 py-[22px] transition-[background-color,padding] duration-150 hover:bg-mar hover:pl-[18px] sm:grid-cols-[120px_1fr_auto] sm:gap-6"
+          >
+            <div class="font-mono text-[15px] font-bold tracking-[1px]">
+              {row.date}
+              <br />
+              <span class="opacity-50">2026</span>
+            </div>
+            <div>
+              <div class="font-display text-[clamp(24px,3.5vw,42px)] font-extrabold uppercase leading-none tracking-[-1px]">
+                {row.city}
+              </div>
+              <div class="mt-[5px] font-mono text-[13px] uppercase tracking-[1px] opacity-70">
+                {row.venue}
+              </div>
+            </div>
+            <div class="col-span-2 sm:col-span-1 sm:justify-self-end">
+              {row.status === "sold" ? (
+                <span
+                  class="inline-block border-[3px] border-mag px-4 py-[9px] font-mono text-[14px] font-bold uppercase tracking-[1px] text-mag"
+                  style="transform:rotate(-4deg);"
+                >
+                  Sold Out
+                </span>
+              ) : (
+                <a
+                  href="/contact"
+                  class="inline-block border-[3px] border-ink bg-ink px-[22px] py-[11px] font-mono text-[14px] font-bold uppercase tracking-[1px] text-paper shadow-[4px_4px_0_var(--color-teal)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-teal)]"
+                >
+                  {STATUS_LABEL[row.status]} →
+                </a>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-[34px] font-mono text-[13px] uppercase tracking-[1px] opacity-60">
+      More dates dropping all summer. Promoters & festivals → <a
+        href="/contact"
+        class="font-bold text-mag underline">book the band</a
+      >.
+    </p>
+  </div>
+</Layout>
