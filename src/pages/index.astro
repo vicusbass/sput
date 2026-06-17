@@ -57,7 +57,8 @@ const tileBg: Record<string, string> = { mar: "bg-mar", mag: "bg-mag", teal: "bg
           >
         </p>
 
-        <div class="mt-[34px] flex flex-wrap gap-3.5">
+        <!-- Hidden on mobile: Tour + Collabs are reachable via the mobile menu -->
+        <div class="mt-[34px] hidden flex-wrap gap-3.5 md:flex">
           <a
             href="/tour"
             class="border-[3px] border-ink bg-ink px-[26px] py-[15px] font-mono text-[14px] font-bold uppercase tracking-[1px] text-paper shadow-[5px_5px_0_var(--color-mag)] transition-transform duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_var(--color-mag)]"

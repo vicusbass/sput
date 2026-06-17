@@ -29,7 +29,7 @@ const spotify = (c: { artist: string; album: string }) =>
       >
         The Collab<br />Map
       </h1>
-      <p class="mt-[18px] max-w-[560px] text-[17px] leading-[1.5]">
+      <p class="mt-[18px] max-w-[560px] text-[18px] leading-[1.5] md:text-[17px]">
         Every node is a record or a run. Tap one to dig into the year, the role, and a place to hit
         play.
       </p>
@@ -103,7 +103,7 @@ const spotify = (c: { artist: string; album: string }) =>
               >{first.role}</span
             >
           </div>
-          <p id="cd-note" class="max-w-[560px] text-[16px] leading-[1.5] opacity-85">
+          <p id="cd-note" class="max-w-[560px] text-[17px] leading-[1.5] opacity-85 md:text-[16px]">
             {first.note}
           </p>
           <a
@@ -297,7 +297,7 @@ const spotify = (c: { artist: string; album: string }) =>
         });
         ar.textContent = c.artist;
         const al = el("div", {
-          fontFamily: "'Space Grotesk',sans-serif",
+          fontFamily: "'DM Sans',sans-serif",
           fontSize: "11px",
           opacity: "0.6",
           marginTop: "1px",

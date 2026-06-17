@@ -21,7 +21,7 @@ import { ABOUT_BIO, GEAR } from "../data/site";
         {
           ABOUT_BIO.map((p, i) => (
             <p
-              class:list={["text-[19px] leading-[1.6]", i < ABOUT_BIO.length - 1 ? "mb-5" : ""]}
+              class:list={["text-[20px] leading-[1.6] md:text-[19px]", i < ABOUT_BIO.length - 1 ? "mb-5" : ""]}
               set:html={p}
             />
           ))
@@ -65,7 +65,7 @@ import { ABOUT_BIO, GEAR } from "../data/site";
               <span class="font-mono text-[11px] font-bold uppercase tracking-[2px] opacity-70">
                 {g.label}
               </span>
-              <span class="font-display text-[20px] font-extrabold uppercase leading-none">
+              <span class="font-display text-[15px] md:text-[18px] font-extrabold uppercase leading-[1.1] break-words hyphens-none">
                 {g.value}
               </span>
             </div>
