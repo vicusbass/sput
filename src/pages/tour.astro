@@ -1,11 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { TOUR, STATUS_LABEL } from "../data/site";
+import { TOUR, STATUS_LABEL, EVENT_TYPES, type EventTypeMeta } from "../data/site";
+
+// Map each event-type accent token to a full Tailwind class string. Written
+// out in full (not interpolated) so the JIT compiler can see and generate them.
+const BADGE_BG: Record<EventTypeMeta["color"], string> = {
+  mag: "bg-mag",
+  teal: "bg-teal",
+  tang: "bg-tang",
+  mar: "bg-mar",
+  violet: "bg-violet",
+};
 ---
 
 <Layout
   title="Tour — On The Road '26 | Robert &quot;Sput&quot; Searight"
-  description="Ghost-Note world tour 2026. Catch Robert &quot;Sput&quot; Searight and the pocket in a room near you. Tickets and dates."
+  description="Robert &quot;Sput&quot; Searight on the road in 2026 — Ghost-Note shows, drum clinics &amp; festivals. Catch the pocket in a room near you. Tickets and dates."
 >
   <div class="mx-auto max-w-[1180px] px-5 pb-[90px] pt-14 sm:px-7">
     <div class="mb-2 flex flex-wrap items-end justify-between gap-4">
@@ -17,7 +27,7 @@ import { TOUR, STATUS_LABEL } from "../data/site";
       <p
         class="max-w-[300px] font-body text-[13px] uppercase leading-[1.7] tracking-[1px]"
       >
-        Ghost-Note world tour. Catch the pocket in a room near you.
+        Concerts, clinics &amp; festivals. Catch the pocket in a room near you.
         <span class="text-tang">↘</span>
       </p>
     </div>
@@ -38,6 +48,11 @@ import { TOUR, STATUS_LABEL } from "../data/site";
               <span class="opacity-50">2026</span>
             </div>
             <div>
+              <span
+                class={`mb-[9px] inline-block ${BADGE_BG[EVENT_TYPES[row.type].color]} px-[10px] py-[4px] font-mono text-[11px] font-bold uppercase leading-none tracking-[1.5px] text-ink`}
+              >
+                {EVENT_TYPES[row.type].label}
+              </span>
               <div class="font-display text-[clamp(16px,2vw,24px)] font-extrabold uppercase leading-none tracking-[-1px]">
                 {row.city}
               </div>

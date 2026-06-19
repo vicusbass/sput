@@ -36,24 +36,51 @@ export const FEATURE_TILES = [
 // ---------------------------------------------------------------------------
 export type TourStatus = "available" | "few" | "sold";
 
+// Every kind of date Robert plays — band shows, clinics, festivals, sessions.
+// Add a new entry here and it becomes available to every tour stop, with its
+// own label + accent colour rendered automatically on the badge.
+export type EventType =
+  | "ghost-note"
+  | "snarky-puppy"
+  | "clinic"
+  | "festival"
+  | "session";
+
+export interface EventTypeMeta {
+  /** Short label shown on the badge, e.g. "Ghost-Note", "Clinic". */
+  label: string;
+  /** Accent palette token (see global.css) used to colour the badge. */
+  color: "mag" | "teal" | "tang" | "mar" | "violet";
+}
+
+export const EVENT_TYPES: Record<EventType, EventTypeMeta> = {
+  "ghost-note": { label: "Ghost-Note", color: "mag" },
+  "snarky-puppy": { label: "Snarky Puppy", color: "teal" },
+  clinic: { label: "Clinic", color: "violet" },
+  festival: { label: "Festival", color: "tang" },
+  session: { label: "Session", color: "mar" },
+};
+
 export interface TourStop {
   date: string;
   city: string;
   venue: string;
+  /** What kind of event this is — drives the badge label + colour. */
+  type: EventType;
   status: TourStatus;
 }
 
 export const TOUR: TourStop[] = [
-  { date: "MAY 02", city: "Austin, TX", venue: "ACL Live · Moody Theater", status: "few" },
-  { date: "MAY 09", city: "New Orleans, LA", venue: "Tipitina's", status: "sold" },
-  { date: "MAY 16", city: "Atlanta, GA", venue: "Variety Playhouse", status: "available" },
-  { date: "JUN 06", city: "Brooklyn, NY", venue: "Brooklyn Steel", status: "few" },
-  { date: "JUN 14", city: "Chicago, IL", venue: "Thalia Hall", status: "available" },
-  { date: "JUN 21", city: "Denver, CO", venue: "Cervantes' Masterpiece", status: "sold" },
-  { date: "JUL 03", city: "London, UK", venue: "Jazz Café", status: "available" },
-  { date: "JUL 11", city: "Paris, FR", venue: "New Morning", status: "few" },
-  { date: "JUL 18", city: "Amsterdam, NL", venue: "Paradiso", status: "available" },
-  { date: "AUG 01", city: "Tokyo, JP", venue: "Blue Note Tokyo", status: "sold" },
+  { date: "MAY 02", city: "Austin, TX", venue: "ACL Live · Moody Theater", type: "ghost-note", status: "few" },
+  { date: "MAY 09", city: "New Orleans, LA", venue: "Tipitina's", type: "ghost-note", status: "sold" },
+  { date: "MAY 16", city: "Atlanta, GA", venue: "Atlanta Institute of Music", type: "clinic", status: "available" },
+  { date: "JUN 06", city: "Brooklyn, NY", venue: "Brooklyn Steel", type: "ghost-note", status: "few" },
+  { date: "JUN 14", city: "Chicago, IL", venue: "Thalia Hall", type: "snarky-puppy", status: "available" },
+  { date: "JUN 21", city: "Denver, CO", venue: "Mile High Jazz Festival", type: "festival", status: "sold" },
+  { date: "JUL 03", city: "London, UK", venue: "Jazz Café", type: "ghost-note", status: "available" },
+  { date: "JUL 11", city: "Paris, FR", venue: "Centre des Musiques Didier Lockwood", type: "clinic", status: "few" },
+  { date: "JUL 18", city: "Amsterdam, NL", venue: "North Sea Jazz Festival", type: "festival", status: "available" },
+  { date: "AUG 01", city: "Tokyo, JP", venue: "Blue Note Tokyo", type: "ghost-note", status: "sold" },
 ];
 
 export const STATUS_LABEL: Record<TourStatus, string> = {
